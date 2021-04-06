@@ -119,7 +119,7 @@ def initialise_db(database):
         raise    
 
 
-def store_in_table(list_of_json_objects, table_name, database='test.db'):
+def store_in_table(list_of_json_objects, table_name, database='local_ioc.db'):
     """
     Inserts the data from the json in the table and database so specified.
     Modifies/Replaces existing data depending on the constraint so set in the queries.
