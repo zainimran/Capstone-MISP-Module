@@ -396,22 +396,20 @@ def get_tuple_list_from_json(list_of_json_information_objects, table_name):
 
 
 def cleanup_input_json(json_object):
-	"""
-	Given the input from the ioc_extract submodule, returns the cleaned up data in a list of json format
+    """
+    Given the input from the ioc_extract submodule, returns the cleaned up data in a list of json format
 
-	Input: 
-		Resulting json from ioc_extract
-	
-	Output: 
-		List of json objects
-	
-	Raises Exception: 
-		No
+    Input: 
+        Resulting json from ioc_extract
 
-	"""
+    Output: 
+        List of json objects
+
+    Raises Exception: 
+        No
+    """
 
     try:
-        # Check if the input JSON object is not None
         output_list_of_dicts = []
         
         if json_object:
@@ -483,7 +481,7 @@ def cleanup_input_json(json_object):
                             temp_dict['malware'] = malware_list
                             
                             output_list_of_dicts.append(temp_dict)
-    
+
     except Exception as e:  
         log.error('[-] Unable to convert the json object to list of tuples')
         log.error(e.args)
@@ -493,19 +491,19 @@ def cleanup_input_json(json_object):
 
 
 def store_in_local_ioc_db(extracted_iocs, database='local_ioc.db'):
-	"""
-	CORE function: Stores the data supplied from the ioc_extract submodule into the database so specified
-	
-	Input:
-		extracted_iocs: JSON object from ioc_extract submodule
+    """
+    CORE function: Stores the data supplied from the ioc_extract submodule into the database so specified
 
-	Output:
-		rc: 0 if successful
+    Input:
+        extracted_iocs: JSON object from ioc_extract submodule
 
-	Raises Exception:
-		Yes
-	
-	"""
+    Output:
+        rc: 0 if successful
+
+    Raises Exception:
+        Yes
+
+    """
     
     rc = 0
     
