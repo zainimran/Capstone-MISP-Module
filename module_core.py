@@ -48,6 +48,28 @@ def handler(q=False):
     """
     <TODO> PLACEHOLDER for CODE
     """
+
+    """
+    FLAG: Should it run it or not? - FLAG field in the request
+    """
+
+    """
+    INVOKE the Web SPIDER
+    """
+
+    """
+    INVOKE IOC_EXTRACT
+    """
+
+    """
+    INVOKE SQLite Module
+    """
+
+    """
+    Send the result back
+    """
+
+
     list_of_dicts = [{}]
 
     response = {'results': [{'types': mispattributes['output'], 'values': list_of_dicts}]}
