@@ -7,7 +7,7 @@ import subprocess
 import shlex
 from util import sqlite_util
 # PLACEHOLDER
-from util import ioc_extract
+# from util import ioc_extract
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(name)s:%(levelname)s:%(message)s')
@@ -106,7 +106,7 @@ def invoke_web_crawler():
 
 def invoke_ioc_extract(param1, param2):
     """
-    Invokes the webcrawler that scrapes the URLs and fetches the blog posts
+    Invokes the IOC extractor submodule
 
     Input:
         XYZ
