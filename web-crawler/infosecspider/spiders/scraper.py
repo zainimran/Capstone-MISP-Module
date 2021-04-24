@@ -3,6 +3,7 @@ import os
 import tldextract
 from pathlib import Path
 import time
+import json
 
 class InfoSecSpider(scrapy.Spider):
     name = "infosec_spider"
@@ -31,14 +32,7 @@ class InfoSecSpider(scrapy.Spider):
         BLOG_TEXT_SELECTOR = 'div[itemprop*=articleBody].c00.c00v0 *::text'
         blog_text_list = response.css(BLOG_TEXT_SELECTOR).getall()
 
-        filename = response.url.split("/")[-1].rstrip('.html')
-        filepath = os.path.join(output_dir, filename)
-        f = open(filepath, 'w')
-
-        if blog_text_list is not None:
-            blog_text = ''.join(blog_text_list)
-            f.write(blog_text)
-            self.log(f'Saved file {filename}')
+        self.write_output(response.url, blog_text_list, output_dir)
     
     def parse_report(self, response, output_dir):
         # REPORT_TEXT_SELECTOR = 'div.region.region-content'
@@ -46,11 +40,15 @@ class InfoSecSpider(scrapy.Spider):
         REPORT_TEXT_SELECTOR = 'table#cma-table *::text'
         report_text_list = response.css(REPORT_TEXT_SELECTOR).getall()
 
-        filename = response.url.split("/")[-1]
+        self.write_output(response.url, report_text_list, output_dir)
+
+    def write_output(self, url, text_list, output_dir):
+        filename = '{}.json'.format(url.split("/")[-1].rstrip('.html'))
         filepath = os.path.join(output_dir, filename)
         f = open(filepath, 'w')
 
-        if report_text_list is not None:
-            report_text = ''.join(report_text_list)
-            f.write(report_text)
+        if text_list is not None:
+            text = ''.join(text_list)
+            output = { 'url': url, 'scraped output': text }
+            json.dump(output, f, indent=4)
             self.log(f'Saved file {filename}')
