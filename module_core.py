@@ -62,7 +62,7 @@ def version():
 
 
 
-def invoke_web_crawler():
+def invoke_web_crawler(url):
     """
     Invokes the webcrawler that scrapes the URLs and fetches the blog posts
 
@@ -87,8 +87,14 @@ def invoke_web_crawler():
     try:
         path_cwd = os.path.abspath('.')
         path_spider = os.path.join(path_cwd, 'web-crawler', 'infosecspider','spiders','scraper.py')
-        command = f'scrapy runspider {path_spider}'
+        
+        if not url:
+            command = f'scrapy runspider {path_spider}'
+        else:
+            command = f'scrapy runspider {path_spider} -a url={url}'
+
         input_args = shlex.split(command)
+        
         # !NOTE!: Do not pass any input parameters to the below string, will result in code execution
         try:
             log.info('[+] Running the webcrawler module...')
@@ -165,8 +171,14 @@ def handler(q=False):
     if q is False:
         return False
     
+    try:
+        url = q['url']
+    except KeyError as e:
+        log.info('[-] No URL was specified...')
+        url = ''
+
     # Scrape the URLs
-    rc_wc = invoke_web_crawler()
+    rc_wc = invoke_web_crawler(url)
 
     if rc_wc:
         misperrors['error'] = 'Unable to scrape the URLs'
