@@ -94,7 +94,7 @@ def invoke_web_crawler(url):
             command = f'scrapy runspider {path_spider} -a url={url}'
 
         input_args = shlex.split(command)
-        
+
         # !NOTE!: Do not pass any input parameters to the below string, will result in code execution
         try:
             log.info('[+] Running the webcrawler module...')
@@ -171,8 +171,10 @@ def handler(q=False):
     if q is False:
         return False
     
+    _request = json.loads(q)
+
     try:
-        url = q['url']
+        url = _request['url']
     except KeyError as e:
         log.info('[-] No URL was specified...')
         url = ''
