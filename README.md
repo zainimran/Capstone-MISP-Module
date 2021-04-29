@@ -16,7 +16,7 @@
 3. `python cyobstract/setup.py install` #install cyobstract dependencies
 4. `pip install --upgrade --force-reinstall progress` #fixes library errors
 
-- Sample code of how to utilize the initiate_ioc_extraction_main function. This function takes a path of JSONS and extracts all IOCs utilizing Cyobstract
+- Sample code of how to utilize the initiate_ioc_extraction_main function. This function takes the output path from Step 1) and extracts all IOCs utilizing Cyobstract module
 ```bash
 from util.ioc_extract import initiate_ioc_extraction_main
 dictionary = initiate_ioc_extraction_main(path_outputs='web-crawler/infosecspider/spiders/output/') #returns a dictionary or None
