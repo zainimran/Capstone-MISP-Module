@@ -115,7 +115,3 @@ def initiate_ioc_extraction_main(path_outputs):
   except Exception as e:
       print('Error>>>', e)
       return None
-    
-
-#Run Main (This function runs all other functions stated above). It returns either a dict or None
-initiate_ioc_extraction_main(path_outputs)
