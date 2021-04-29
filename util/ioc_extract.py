@@ -106,10 +106,10 @@ def fetch_crawled_files(directory, desired_iocs_list, time_duration_hours=1): #G
   return parent_dirs
 
 #Def Main (This function runs all other functions stated above)
-def initiate_ioc_extraction_main(path_outputs):  
+def initiate_ioc_extraction_main(path_outputs,view_scraping_within_last_hours=1):  
   try:
       desired_iocs = ['ipv4addr', 'ipv6addr', 'ipv4range', 'ipv6range', 'ipv4cidr', 'ipv6cidr', 'asn', 'fqdn', 'email', 'filename', 'url', 'md5', 'sha1', 'sha256', 'ssdeep', 'filepath', 'regkey', 'useragent', 'cve', 'cc', 'isp', 'asnown', 'incident', 'malware', 'topic']
-      ioc_extracted_dict = fetch_crawled_files(path_outputs, desired_iocs, time_duration_hours=1)
+      ioc_extracted_dict = fetch_crawled_files(path_outputs, desired_iocs, view_scraping_within_last_hours)
       print("\n>>>>>>>>>>>>>Succesfully extracted<<<<<<<<<<<< \n")
       return ioc_extracted_dict
   except Exception as e:
