@@ -23,8 +23,8 @@ import os
 import datetime
 import sys
 current_working_dir = os.getcwd()
-path_outputs =  '/' + os.path.join(*current_working_dir.split('/')[:-1], 'web-crawler/infosecspider/spiders/output/')  #'Capstone-MISP-Module-main/web-crawler/infosecspider/spiders/output/'
-cyobstract_subfolder = '/' + os.path.join(*current_working_dir.split('/')[:-2], 'cyobstract/cyobstract')
+path_outputs =  '/' + os.path.join(*current_working_dir.split('/'), 'web-crawler/infosecspider/spiders/output/')  #'Capstone-MISP-Module-main/web-crawler/infosecspider/spiders/output/''
+cyobstract_subfolder = '/' + os.path.join(*current_working_dir.split('/'), 'cyobstract/cyobstract')
 sys.path.insert(1, cyobstract_subfolder)
 import extract
 
