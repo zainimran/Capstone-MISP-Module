@@ -8,3 +8,9 @@
 3. Open the python virtual environment for spider module with `pipenv shell`
 4. Navigate to `infosecspider/spiders`
 5. Run the spider with `scrapy runspider scraper.py`, where `scraper.py` is the name of the scraping script in `infosecspider/spiders`
+
+
+## How to run the ioc-extraction module
+1. `unzip cyobstract.zip`
+2. `python cyobstract/setup.py install
+3. `pip install --upgrade --force-reinstall progress`
