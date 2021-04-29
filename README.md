@@ -12,5 +12,5 @@
 
 ## How to run the ioc-extraction module
 1. `unzip cyobstract.zip`
-2. `python cyobstract/setup.py install
+2. `python cyobstract/setup.py install`
 3. `pip install --upgrade --force-reinstall progress`
