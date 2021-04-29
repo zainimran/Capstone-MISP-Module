@@ -24,7 +24,7 @@ from util.ioc_extract import initiate_ioc_extraction_main
 dictionary = initiate_ioc_extraction_main(path_outputs='web-crawler/infosecspider/spiders/output/', view_scraping_within_last_hours=1) 
 print(dictionary)
 ```
-### Partial sample of output on a CISA article
+### Partial sample of output on a CISA analysis-report (url: https://us-cert.cisa.gov/ncas/analysis-reports/ar21-072d)
 ```bash
 {'cisa': {'20210429-2315': {'ar21-072d.json': {'article_url': 'https://us-cert.cisa.gov/ncas/analysis-reports/ar21-072d',
     'asn': (),
