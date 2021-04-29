@@ -11,7 +11,8 @@
 
 
 ## 2) How to run the ioc-extraction module
-1. `unzip cyobstract.zip` #Cyobstract IOC extraction tool authored by Sam-Perl, et al.
-2. `python cyobstract/setup.py install` #install cyobstract dependencies
-3. `pip install --upgrade --force-reinstall progress` #fixes library errors
+1. Navigate to `Capstone-MISP-Module/`
+2. `unzip cyobstract.zip` #Cyobstract IOC extraction tool authored by Sam-Perl, et al.
+3. `python cyobstract/setup.py install` #install cyobstract dependencies
+4. `pip install --upgrade --force-reinstall progress` #fixes library errors
 5. `python /util/ioc_extract.py` #returns a dictionary of extracted IoCs or None
