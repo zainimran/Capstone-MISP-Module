@@ -10,9 +10,15 @@
 5. Run the spider with `scrapy runspider scraper.py`, where `scraper.py` is the name of the scraping script in `infosecspider/spiders`
 
 
-## 2) How to run the ioc-extraction module
+## 2) Setting up and How to run the Indicators Of Compromise (IOC) extraction module on the /outputs/ folder generated from step 1
 1. Navigate to `Capstone-MISP-Module/`
 2. `unzip cyobstract.zip` #Cyobstract IOC extraction tool authored by Sam-Perl, et al.
 3. `python cyobstract/setup.py install` #install cyobstract dependencies
 4. `pip install --upgrade --force-reinstall progress` #fixes library errors
-5. `python util/ioc_extract.py` #returns a dictionary of extracted IoCs or None
+
+- Sample code of how to utilize the initiate_ioc_extraction_main function. This function takes a path of JSONS and extracts all IOCs utilizing Cyobstract
+```bash
+from util.ioc_extract import initiate_ioc_extraction_main
+dictionary = initiate_ioc_extraction_main(path_outputs='web-crawler/infosecspider/spiders/output/') #returns a dictionary or None
+print(dictionary)
+```
