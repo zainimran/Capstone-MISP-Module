@@ -1,6 +1,7 @@
 """
 *This script requires the GitHub library 'cyobstract' authored by Sam Perl from CMU-SEI, et al. for Indicators of Compromise Extraction (IOCs): https://github.com/cmu-sei/cyobstract.
-We install it using the command: git clone https://github.com/cmu-sei/cyobstract.git
+We install it at the location next to our project folder (but not inside, to allow easy access to our functions. I.e. you should have 2 folders: './Capstone-MISP-Module-main' and './cyobstract' in the same parent folder) 
+using the command: git clone https://github.com/cmu-sei/cyobstract.git
 
 *This script is to be run after web_scraping the webpages/technical reports by running the command: "scrapy runspider scraper.py", which creates a '.../spiders/output/' folder
 
@@ -9,19 +10,23 @@ These are invoked in the main function initiate_ioc_extraction_main(), which ret
 or 2) None with a print statement of the Error if it failled the IoC extraction.
 
   Output format of dict of dicts by initiate_ioc_extraction_main():
-  #Structure::::::::::::
-    # {domainname: {scrapyscantime_folder_name: {     {article1_name: {ipv4: , md5,... }                }  }           }}
+  #Structure format & example below:
+                                                    {Original article link       , blog data + extracted IOCs}
+    {domainname: {scrapyscantime_folder_name: {     {article1_name: {article_url: , data:    ,   md5:, cve,... }                }  }           }}
+
+    {fireeye:    {20210429-1732:              {     {ar21-072d.json: {arcile_url:'https://us-cert.cisa.gov/ncas/analysis-reports/ar21-072d', data: 'complete_article_raw_text',md5: ('4580f7f2f2d7ac1af26693132c2e756d',    '78564702783ba738aa6a920f3b15a202',
+    'ab3963337cf24dc2ade6406f11901e1f'), cve: ('CVE-2021-26855', 'CVE-2021-27065'),.....    }                }  }           }}
 """
 
-from cyobstract import extract #need to fix relative path here
 import json
 import os
 import datetime
-
-
+import sys
 current_working_dir = os.getcwd()
-path_outputs =  os.path.join(current_working_dir[:-4], 'web-crawler/infosecspider/spiders/output/')
-
+path_outputs =  '/' + os.path.join(*current_working_dir.split('/')[:-1], 'web-crawler/infosecspider/spiders/output/')  #'Capstone-MISP-Module-main/web-crawler/infosecspider/spiders/output/'
+cyobstract_subfolder = '/' + os.path.join(*current_working_dir.split('/')[:-2], 'cyobstract/cyobstract')
+sys.path.insert(1, cyobstract_subfolder)
+import extract
 
 def read_file(fname,parent_dirs,desired_iocs_list):
   parent_name = fname.split('/')[-3]  #Parent name [ciso,fireeye]
@@ -113,5 +118,5 @@ def initiate_ioc_extraction_main(path_outputs):
       return None
     
 
-#Run Main (This function runs all other functions stated above)
+#Run Main (This function runs all other functions stated above). It returns either a dict or None
 initiate_ioc_extraction_main(path_outputs)
