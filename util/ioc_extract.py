@@ -1,7 +1,6 @@
 """
 *This script requires the GitHub library 'cyobstract' authored by Sam Perl from CMU-SEI, et al. for Indicators of Compromise Extraction (IOCs): https://github.com/cmu-sei/cyobstract.
-We install it at the location next to our project folder (but not inside, to allow easy access to our functions. I.e. you should have 2 folders: './Capstone-MISP-Module-main' and './cyobstract' in the same parent folder) 
-using the command: git clone https://github.com/cmu-sei/cyobstract.git
+We describe how to install it and its dependencies on the README
 
 *This script is to be run after web_scraping the webpages/technical reports by running the command: "scrapy runspider scraper.py", which creates a '.../spiders/output/' folder
 
