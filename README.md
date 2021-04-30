@@ -7,8 +7,7 @@
 2. If not done already, install project dependencies with `pipenv install`
 3. Open the python virtual environment for spider module with `pipenv shell`
 4. Navigate back to root directory: `Capstone-MISP-Module/web-crawler`
-5. Run the spider with `scrapy runspiderweb-crawler/infosecspider/spiders/scraper.py`, where `scraper.py` is the name of the scraping script in `infosecspider/spiders`. This will create an `/output/` folder inside the directory of `Capstone-MISP-Module/web-crawler`
-
+5. Run the spider with `scrapy runspiderweb-crawler/infosecspider/spiders/scraper.py`, where `scraper.py` is the name of the scraping script in `infosecspider/spiders`. This will create an `/output/` folder inside the directory of `Capstone-MISP-Module/` which will contain all the web-scraped urls/blogs posts/technical reports
 
 ## 2) Setting up and How to run the Indicators Of Compromise (IOC) extraction module on the /outputs/ folder generated from step 1
 1. Navigate to `Capstone-MISP-Module/`
