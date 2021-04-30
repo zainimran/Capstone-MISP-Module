@@ -7,7 +7,11 @@
 2. If not done already, install project dependencies with `pipenv install`
 3. Open the python virtual environment for spider module with `pipenv shell`
 4. Navigate back to root directory: `Capstone-MISP-Module/web-crawler`
-5. Run the spider with `scrapy runspiderweb-crawler/infosecspider/spiders/scraper.py`, where `scraper.py` is the name of the scraping script in `infosecspider/spiders`. This will create an `/output/` folder inside the directory of `Capstone-MISP-Module/` which will contain all the web-scraped urls/blogs posts/technical reports
+5. Run the spider with `scrapy runspiderweb-crawler/infosecspider/spiders/scraper.py`, where `scraper.py` is the name of the scraping script in `infosecspider/spiders`. This will create an `/output/` folder inside the directory of `Capstone-MISP-Module/` which will contain all the web-scraped urls/blogs posts/technical reports.
+
+### Viewing the initial folders created in /Capstone-MISP-Module/output/:
+<div align="center"><img alt="First pass OCR transcription" width="600px" src="images/firstpass.png"></div>
+
 
 ## 2) Setting up and How to run the Indicators Of Compromise (IOC) extraction module on the /outputs/ folder generated from step 1
 1. Navigate to `Capstone-MISP-Module/`
@@ -23,6 +27,7 @@ from util.ioc_extract import initiate_ioc_extraction_main
 dictionary = initiate_ioc_extraction_main(path_outputs='output/', view_scraping_within_last_hours=1) 
 print(dictionary)
 ```
+
 ### Partial sample of output on a CISA analysis-report (url: https://us-cert.cisa.gov/ncas/analysis-reports/ar21-072d)
 ```bash
 {'cisa': {'20210429-2315': {'ar21-072d.json': {'article_url': 'https://us-cert.cisa.gov/ncas/analysis-reports/ar21-072d',
@@ -62,9 +67,18 @@ print(dictionary)
      'ab3963337cf24dc2ade6406f11901e1f'), ...
 ```
 
-## 3) (Optional) Expanding the urls (blogs/technical reports/hacker news, etc) through the use of google searches
+## 3) (Optional) Expanding the urls (blogs/technical reports/hacker news, etc) through the use of google searches implemented in Capstone-MISP-Module/util/ioc_extract_expander.py
 
-- Sample code
+A powerful function of our tool comes from the power of allowing a user to expand their database by selecting a previously extracted ioc from a webpage/article for a deep search of the internet. Say you are a security expert and want to get as much information on a new malware with a particular IOC (say a particular MD5 hash). You can do this by running the function below, which will perform X number of google searches for your desired IOC, update the '/Capstone-MISP-Module/output/' folder with the new scraped-websites, and return all the extracted IOCs from how many google searches you specify. 
+
+The parameters this function takes are
+1) dictionary= dictionary of IOCs you have scraped so far
+2) article_lookup = name of an article which contains an IOC category you are interested in, i.e. MD5
+3) num_google_results = how many google hits do you desired to be scraped for each IOC in the chosen IOC category
+4) search_speed = speed of google searches (warning: do not set too low, or may be IP blocked by Google)
+
+
+- Sample code to run ioc_extract_expander.py
 ```bash
 from util.ioc_extract import initiate_ioc_extraction_main
 from util.ioc_extract_expander import recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches
@@ -80,4 +94,9 @@ print('\n----------------Break------------\n')
 
 #We call again initiate_ioc_extraction_main() to generate a bigger dictionary utilizing all the newly google queried articles for the extraction of more IOCs above
 bigger_dictionary = initiate_ioc_extraction_main(path_outputs='output/', view_scraping_within_last_hours=1) 
+print(bigger_dictionary) #Will print a bigger dictionary containing all new articles. Won't show output here as it is a long dictionary.
 ```
+- Demonstration of expansion of scraped-websites folder in /Capstone-MISP-Module/output/ (compare to Section 1):
+
+<div align="center"><img alt="First pass OCR transcription" width="600px" src="images/firstpass.png"></div>
+
