@@ -67,7 +67,7 @@ print(dictionary)
      'ab3963337cf24dc2ade6406f11901e1f'), ...
 ```
 
-## 3) (Optional) Expanding the urls (blogs/technical reports/hacker news, etc) through the use of google searches implemented in Capstone-MISP-Module/util/ioc_extract_expander.py
+## 3) (Optional) Expanding the current scraped urls through the use of google searches (blogs/technical reports/hacker news, etc) implemented in Capstone-MISP-Module/util/ioc_extract_expander.py
 
 A powerful function of our tool comes from the power of allowing a user to expand their database by selecting a previously extracted ioc from a webpage/article for a deep search of the internet. Say you are a security expert and want to get as much information on a new malware with a particular IOC (say a particular MD5 hash). You can do this by running the function below, which will perform X number of google searches for your desired IOC, update the '/Capstone-MISP-Module/output/' folder with the new scraped-websites, and return all the extracted IOCs from how many google searches you specify. 
 
