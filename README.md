@@ -103,6 +103,11 @@ print(bigger_dictionary) #Will print a bigger dictionary containing all new arti
 ```
 ### You could even call 'recursive_ioc_extractor_....' several times in a row as well (example use case: interested in obtaining more information of 2 new malwares through their MD5 hashes):
 ```bash
+from util.ioc_extract import initiate_ioc_extraction_main
+from util.ioc_extract_expander import recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches
+
+dictionary = initiate_ioc_extraction_main(path_outputs='output/', view_scraping_within_last_hours=1) 
+
 article_1= 'ar21-084a.json'
 article_2= 'ar21-072e.json'
 selected_ioc_type = 'md5'
