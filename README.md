@@ -78,7 +78,7 @@ The parameters this function takes are
 4) search_speed = speed of google searches (warning: do not set too low, or may be IP blocked by Google)
 
 
-- Sample code to run ioc_extract_expander.py
+- Sample code to run ioc_extract_expander.py for one article
 ```bash
 from util.ioc_extract import initiate_ioc_extraction_main
 from util.ioc_extract_expander import recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches
@@ -96,6 +96,16 @@ print('\n----------------Break------------\n')
 bigger_dictionary = initiate_ioc_extraction_main(path_outputs='output/', view_scraping_within_last_hours=1) 
 print(bigger_dictionary) #Will print a bigger dictionary containing all new articles. Won't show output here as it is a long dictionary.
 ```
+- You could even call 'recursive_ioc_extractor_....' several times in a row as well (example use case: interested in obtaining more information of 2 new malwares through their MD5 hashes):
+```bash
+article_1= 'ar21-084a.json'
+article_2= 'ar21-072e.json'
+selected_ioc_type = 'md5'
+recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches(dictionary=dictionary, article_lookup=article_1, ioc=selected_ioc_type, num_google_results=10,search_speed=3)
+recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches(dictionary=dictionary, article_lookup=article_2, ioc=selected_ioc_type, num_google_results=10,search_speed=3)
+
+```
+
 - Demonstration of expansion of scraped-websites folder in /Capstone-MISP-Module/output/ (compare to Section 1):
 
 <div align="center"><img alt="First pass OCR transcription" width="600px" src="images/outputfolderexpanded.png"></div>
