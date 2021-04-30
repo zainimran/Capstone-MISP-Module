@@ -26,6 +26,8 @@ cyobstract_subfolder = '/' + os.path.join(*current_working_dir.split('/'), 'cyob
 sys.path.insert(1, cyobstract_subfolder)
 import extract
 
+
+
 def read_file(fname,parent_dirs,desired_iocs_list):
   parent_name = fname.split('/')[-3]  #Parent name [ciso,fireeye]
   sub_parent_timecreatedfolder_name = fname.split('/')[-2] #sub-parent name (name is time when scrapy scan is performed)
@@ -55,6 +57,7 @@ def read_file(fname,parent_dirs,desired_iocs_list):
   return parent_dirs
 
 
+
 def parse_filename_date(dirpath):  
   #check if Scrapy scan is within time_duration timeframe (to look at scans only in the last X hours
   year_day_time = dirpath.split('/')[-1]
@@ -69,6 +72,8 @@ def parse_filename_date(dirpath):
 
   return hour
 
+
+
 #Class for easily creating dict of dicts of dicts (used in function fetch_crawled_files())
 class AutoVivification(dict): #https://stackoverflow.com/questions/651794/whats-the-best-way-to-initialize-a-dict-of-dicts-in-python
     """Implementation of perl's autovivification feature."""
@@ -78,6 +83,8 @@ class AutoVivification(dict): #https://stackoverflow.com/questions/651794/whats-
         except KeyError: #Allows the creation of dicts with keys that do not have been defined before by returning an empty dict on eror
             value = self[item] = type(self)()
             return value
+
+
 
 def fetch_crawled_files(directory, desired_iocs_list, time_duration_hours=1): #Grab Zain's outputs and extract iocs from each folder
   cntr = 0
@@ -103,6 +110,8 @@ def fetch_crawled_files(directory, desired_iocs_list, time_duration_hours=1): #G
       if article_hour > range_: #only get IocS of scan above range_ of time_duration_hours of last scans we want
         read_file(fname, parent_dirs,desired_iocs_list) #returns a dict will all data
   return parent_dirs
+
+
 
 #Def Main (This function runs all other functions stated above)
 def initiate_ioc_extraction_main(path_outputs,view_scraping_within_last_hours=1):  

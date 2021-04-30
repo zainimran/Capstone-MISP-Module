@@ -6,8 +6,7 @@ import logging
 import subprocess
 import shlex
 from util import sqlite_util
-# PLACEHOLDER
-# from util import ioc_extract
+from util import ioc_extract, ioc_extract_expander
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(name)s:%(levelname)s:%(message)s')
@@ -30,7 +29,7 @@ moduleinfo = {
 
 # Setup MISPATTRIBUTES object
 mispattributes = {
-    'input': ['url'],
+    'input': ['action', 'url', 'recursive', 'md5', 'sha1', 'sha256', 'ipv4', 'malware_name'],
     'output': ['text'],
 }
 
@@ -104,13 +103,14 @@ def invoke_web_crawler(url):
             log.error('[-] Failed to run the web crawler.')
             log.error(f'[--] Return code: {e.returncode}')
             rc = 1
-        return rc
+
     except:
         rc = 1
-        return rc
+    
+    return rc
 
 
-def invoke_ioc_extract(param1, param2):
+def invoke_ioc_extract(output_path, time_duration):
     """
     Invokes the IOC extractor submodule
 
@@ -128,8 +128,41 @@ def invoke_ioc_extract(param1, param2):
         or explicit instructions need to be given during the plugin installation.
     """
     
-    # PLACEHOLDER
-    return {}
+    try:
+        iocs_dict = ioc_extract.initiate_ioc_extraction_main(path_outputs=output_path, view_scraping_within_last_hours=time_duration)
+        
+        # Check if it is an empty dict or a None type object
+        if not iocs_dict:
+            
+            # If so, set it as an empty dict object
+            iocs_dict = {}
+
+    except:
+        log.error('[-] Failed to run ioc extraction submodule on the scraped data...')
+        iocs_dict = {}
+    
+    return iocs_dict
+
+
+
+def invoke_web_scraper_recursive(ioc_extract_dict, article, ioc_category):
+    """
+    <TODO: WIP>
+
+    """
+    rc_rec = 0
+
+    try:
+        rc_rec = ioc_extract_expander.recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches(dictionary=ioc_extract_dict, 
+        article_lookup=article, 
+        ioc=ioc_category, 
+        num_google_results=10,
+        search_speed=3)
+
+    except:
+        rc_rec = 1
+    
+    return rc_rec
 
 
 
@@ -173,37 +206,119 @@ def handler(q=False):
     
     _request = json.loads(q)
 
+    # input_param_list = ['action', 'url', 'recursive', 'md5', 'sha1', 'sha256', 'ipv4', 'malware_name']
+    valid_actions = ['scrape', 'get_from_db']
+    valid_iocs = ['md5', 'sha1', 'sha256', 'ipv4', 'malware_name']
+    valid_recursive_flags = [0, 1]
+
+
+    # Fetch the action so requested, if not a valid action, return the MISPERROR object with error value set
     try:
-        url = _request['url']
-    except KeyError as e:
-        log.info('[-] No URL was specified...')
-        url = ''
-
-    # Scrape the URLs
-    rc_wc = invoke_web_crawler(url)
-
-    if rc_wc:
-        misperrors['error'] = 'Unable to scrape the URLs'
+        action_requested = _request['action']
+        if action_requested not in valid_actions:
+            misperrors['error'] = 'Invalid action specified. Please select one from: scrape, get_from_db'
+            return misperrors['error']
+    
+    except KeyError:
+        misperrors['error'] = 'No action specified. Please select one from: scrape, get_from_db'
         return misperrors['error']
-    
-    # Extract IOCs
-    try:
-        extracted_iocs_dict= {}
-        extracted_iocs_dict = invoke_ioc_extract(para1, para2)
-    except:
-        log.error('[-] Failed to retrieve IOCs from the scraped data...')
-        misperrors['error'] = 'Unable to retrieve IOCs from crawled webpages'
-        return misperrors['error']
-    
-    # Store extracted IOCs in the database
-    if extracted_iocs_dict:
-        rc_db = invoke_store_iocs_in_db(extracted_iocs_dict, database='local_ioc.db')
-        if rc_db:
-            log.error('[-] Failed to store the IOCs in the database...')
-            # Even if it fails to store, we would still like to alert the user
-            extracted_iocs_dict['error'] = 'Failed to store the retreived IOCs in the database'
 
-    # Return the results back to the user
-    response = {'results': [{'types': mispattributes['output'], 'values': extracted_iocs_dict}]}
+
+    # If the user has requested for scraping, proceed as below
+    if action_requested == 'scrape':
+        
+        # Identify the URL so supplied
+        try:
+            url = _request['url']
+
+        # If none, default to hardcoded sources
+        except KeyError:
+            log.info('[-] No URL was specified...')
+            log.info('[*] Defaulting to harcoded data sources...')
+            url = ''
+        
+        # Identify if the recursive flag has been set (1)
+        try:
+            recursive = _request['recursive']
+            if recursive not in valid_recursive_flags:
+                log.info('[-] Invalid recursive value specified. Defaulting to 0.')
+                recursive = 0
+        
+        # If not, set the flag as (0), default behavior would not involve recursion
+        except KeyError:
+            log.info('[-] No recursive value specified. Defaulting to 0.')
+            recursive = 0
+        
+        # Scrape the URLs
+        rc_wc = invoke_web_crawler(url)
+
+        if rc_wc:
+            misperrors['error'] = 'Unable to scrape the URLs'
+            return misperrors['error']
+        
+
+        # Extract IOCs
+        try:
+            extracted_iocs_dict_initial = invoke_ioc_extract('outputs/', 1)
+        except:
+            log.error('[-] Failed to retrieve IOCs from the scraped data...')
+            misperrors['error'] = 'Unable to retrieve IOCs from crawled webpages'
+            return misperrors['error']
+        
+        global_response_dict = extracted_iocs_dict_initial
+
+        # Store extracted IOCs in the database
+        if extracted_iocs_dict_initial:
+            rc_db = invoke_store_iocs_in_db(extracted_iocs_dict_initial, database='local_ioc.db')
+            if rc_db:
+                log.error('[-] Failed to store the IOCs in the database...')
+                # Even if it fails to store, we would still like to alert the user
+                global_response_dict['error'] = 'Failed to store the retreived IOCs in the database, '
+
+            # Check if we need to recursively fetch the IoCs
+            if recursive:
+                # PLACEHOLDER
+                article = ''
+
+                # PLACEHOLDER 
+                ioc_category = ''
+
+                # PLACEHOLDER, Run the recursive webcrawler
+                rc_rec = invoke_web_scraper_recursive(extracted_iocs_dict_initial, article, ioc_category)
+
+                # If not successful, return the response object
+                if rc_rec:
+                    log.error('[-] Failed to run the recursive submodule...')
+                    global_response_dict['error'] += 'Failed to run the recursive submodule... '
+                    response = {'results': [{'types': mispattributes['output'], 'values': global_response_dict}]}
+                    return response
+
+                # Try to fetch the IoCs
+                try:
+                    extracted_iocs_dict = invoke_ioc_extract('outputs/', 1)
+                except:
+                    log.error('[-] Failed to retrieve IOCs from the recursively scraped data...')
+                    global_response_dict['error'] += 'Failed to extract IoCs in the recursive submodule, '
+                    response = {'results': [{'types': mispattributes['output'], 'values': global_response_dict}]}
+                    return response
+
+                # If successful and non-empty, store them in the DB
+                if extracted_iocs_dict:
+                    # Only set the global dict to the newly extracted_iocs_dict if non-empty
+                    # Else return the original (w/o recursion) dict
+                    global_response_dict = extracted_iocs_dict
+                    
+                    rc_db = invoke_store_iocs_in_db(extracted_iocs_dict, database='local_ioc.db')
+                    if rc_db:
+                        log.error('[-] Failed to store the IOCs in the database...')
+                        # Even if it fails to store, we would still like to alert the user
+                        global_response_dict['error'] = 'Failed to store the retreived IOCs in the database, '
+
+        # Setup the return object, that would be returned back to the user
+        response = {'results': [{'types': mispattributes['output'], 'values': global_response_dict}]}
     
+    elif action_requested == 'get_from_db':
+        # PLACEHOLDER
+        pass
+
     return response

@@ -4,11 +4,15 @@ Then it extracts the IOCS over each newly found url (through google searches), a
 You maybe view the results by using the bash command: '$ls ouput/' to view the new directories (each new directory is a new website that was found automatically)
 """
 
-from module_core import invoke_web_crawler
-from util.ioc_extract import initiate_ioc_extraction_main 
+
+
+import re
 import requests
 from bs4 import BeautifulSoup
-import re
+from module_core import invoke_web_crawler
+from util.ioc_extract import initiate_ioc_extraction_main 
+
+
 
 #Helper 1
 #Seaches for ioc in url text, if it finds it, it returns True. If it can not find it, it scrapes this url from the list by returning False
@@ -23,6 +27,8 @@ def url_find_ioc(ioc, url):
   else:
     #print("string was not found")
     return False
+
+
 
 # Helper 2
 #search google for a string=search_string
@@ -43,16 +49,22 @@ def search_google(search_string,num_results=5,search_speed=5):
         continue
   return url_list
 
+
+
 #Helper 3
 #Given an list of iocs, it does a google search for the top `num_results` of each ioc in the list, web-scrapes them, and stores results in '/output/' folder
 def ioc_extractor_over_google(iocs_list,num_results=5,search_speed=5):
   complete_list_url = []
+  
   for identifiers in iocs_list:
     print(identifiers)
     complete_list_url.extend(search_google(search_string=identifiers,num_results=num_results,search_speed=search_speed))
 
   for url_sample in complete_list_url:
-    invoke_web_crawler(url_sample)
+    rc_wc = invoke_web_crawler(url_sample)
+  
+  return rc_wc
+
 
 
 # Main function which calls the functions above
@@ -64,8 +76,14 @@ def ioc_extractor_over_google(iocs_list,num_results=5,search_speed=5):
 #   num_google_results= how many google results searched,
 #   search_speed= speed of google searches (do not set too low to prevent getting IP banned by Google)
 def recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches(dictionary=None, article_lookup=None, ioc='md5', num_google_results=5,search_speed=3):
+  
+  rc = 0
+  
   if dictionary is None or article_lookup is None:
     print('You must provide a valid dictionary of IOCS and a "VALID" name of an article which is a key in this dictionary')
+    rc = 1
+    return rc
+  
   else:
     for key,value in dictionary.items():
       for scan_time, article_name_dict in value.items():
@@ -78,9 +96,15 @@ def recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches(dict
             
             print('ioc_list', ioc_list)
             #Perform google searches over the list of iocs, and extracts/populates the newly found articles+IOCS to the /ouput/ folder
-            ioc_extractor_over_google(iocs_list=ioc_list,num_results=num_google_results,search_speed=search_speed)
+            rc_sub = ioc_extractor_over_google(iocs_list=ioc_list,num_results=num_google_results,search_speed=search_speed)
+
+            if rc_sub:
+              return rc_sub
 
           except Exception as e:
-            print('could not find IOC: ', ioc, 'try using a different IOC or different article which DOSE contain the IOC you indicated')
+            print('Could not find IOC: ', ioc, 'try using a different IOC or different article which contains the IOC so provided')
             print(e)
-            return None
+            rc = 1
+            return rc
+  
+  return rc
