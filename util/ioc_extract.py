@@ -22,7 +22,6 @@ import os
 import datetime
 import sys
 current_working_dir = os.getcwd()
-path_outputs =  '/' + os.path.join(*current_working_dir.split('/'), 'web-crawler/infosecspider/spiders/output/')  #'Capstone-MISP-Module-main/web-crawler/infosecspider/spiders/output/''
 cyobstract_subfolder = '/' + os.path.join(*current_working_dir.split('/'), 'cyobstract/cyobstract')
 sys.path.insert(1, cyobstract_subfolder)
 import extract
@@ -83,7 +82,7 @@ class AutoVivification(dict): #https://stackoverflow.com/questions/651794/whats-
 def fetch_crawled_files(directory, desired_iocs_list, time_duration_hours=1): #Grab Zain's outputs and extract iocs from each folder
   cntr = 0
   parent_dirs = AutoVivification() #dictionary of all parent dirs (our websites which we scan) -> {'cisa':, 'fireeye':}
-  for dirpath, dirs, files in os.walk(path_outputs):
+  for dirpath, dirs, files in os.walk(directory):
     if cntr ==0:  #store root directories names, i.e. ['cisa', 'fireeye']
       for parent_name in dirs:
           parent_dirs[parent_name]  #create new key for each parent name; value will be populated with another dict of article names containing dict of IOCS
