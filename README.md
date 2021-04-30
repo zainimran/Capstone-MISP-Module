@@ -88,7 +88,7 @@ from util.ioc_extract_expander import recursive_ioc_extractor_from_article_name_
 dictionary = initiate_ioc_extraction_main(path_outputs='output/', view_scraping_within_last_hours=1) 
 
 #updates 'Capstone-MISP-Module/output' folder with new entries through google searches
-recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches(dictionary=dictionary, article_lookup='ar21-084a.json', ioc='md5', num_google_results=5,search_speed=5)
+recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches(dictionary=dictionary, article_lookup='ar21-084a.json', ioc='md5', num_google_results=10,search_speed=3)
 
 print('\n----------------Break------------\n')
 
