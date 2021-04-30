@@ -9,7 +9,7 @@
 4. Navigate back to root directory: `Capstone-MISP-Module/web-crawler`
 5. Run the spider with `scrapy runspiderweb-crawler/infosecspider/spiders/scraper.py`, where `scraper.py` is the name of the scraping script in `infosecspider/spiders`. This will create an `/output/` folder inside the directory of `Capstone-MISP-Module/` which will contain all the web-scraped urls/blogs posts/technical reports.
 
-### Viewing the initial folders created in /Capstone-MISP-Module/output/:
+- Viewing the initial folders created in /Capstone-MISP-Module/output/:
 <div align="center"><img alt="First pass OCR transcription" width="400px" src="images/outputfoldervanilla.png"></div>
 
 
