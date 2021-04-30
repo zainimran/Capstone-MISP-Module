@@ -22,8 +22,8 @@
 - Sample code of how to utilize the initiate_ioc_extraction_main function. This function  and extracts all IOCs utilizing Cyobstract module
 
 The parameters this function takes are:
-  1) path_outputs= takes the '/output' folder path from Section 1, where the scraped webpages are location in JSON format
-  2) view_scraping_within_last_hours= filter web-scraped-results based on the number of hours (note: this time is set when we run scraper.py from Section 1, and that all urls are scanned every time (to check for blog/technical reports updates, which might contain new IOCs)
+  * path_outputs= takes the '/output' folder path from Section 1, where the scraped webpages are location in JSON format
+  * view_scraping_within_last_hours= filter web-scraped-results based on the number of hours (note: this time is set when we run scraper.py from Section 1, and that all urls are scanned every time (to check for blog/technical reports updates, which might contain new IOCs)
 
 ```bash
 from util.ioc_extract import initiate_ioc_extraction_main
@@ -77,10 +77,10 @@ print(dictionary)
 A powerful function of our tool comes from the power of allowing a user to expand their database by selecting a previously extracted ioc from a webpage/article for a deep search of the internet. Say you are a security expert and want to get as much information on a new malware with a particular IOC (say a particular MD5 hash). You can do this by running the function below, which will perform X number of google searches for your desired IOC, update the '/Capstone-MISP-Module/output/' folder with the new scraped-websites, and return all the extracted IOCs from how many google searches you specify. 
 
 The parameters this function takes are:
-  1) dictionary= dictionary of IOCs you have scraped so far
-  2) article_lookup = name of an article which contains an IOC category you are interested in, i.e. MD5
-  3) num_google_results = how many google hits do you desired to be scraped for each IOC in the chosen IOC category
-  4) search_speed = speed of google searches (warning: do not set too low, or may be IP blocked by Google)
+  * dictionary= dictionary of IOCs you have scraped so far
+  * article_lookup = name of an article which contains an IOC category you are interested in, i.e. MD5
+  * num_google_results = how many google hits do you desired to be scraped for each IOC in the chosen IOC category
+  * search_speed = speed of google searches (warning: do not set too low, or may be IP blocked by Google)
 
 
 - Sample code to run ioc_extract_expander.py for one article
