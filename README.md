@@ -101,7 +101,7 @@ print('\n----------------Break------------\n')
 bigger_dictionary = initiate_ioc_extraction_main(path_outputs='output/', view_scraping_within_last_hours=1) 
 print(bigger_dictionary) #Will print a bigger dictionary containing all new articles. Won't show output here as it is a long dictionary.
 ```
-### You could even call 'recursive_ioc_extractor_....' several times in a row as well (example use case: interested in obtaining more information of 2 new malwares through their MD5 hashes):
+### You could even call 'recursive_ioc_extractor_....' several times in a row as well (example use case: interested in obtaining more information of 2 new malwares through their MD5 hashes) (*Note, this code takes around 30 minutes as we are scraping 2 big articles which contain several MD5's in order to create a robust dataset*):
 ```bash
 from util.ioc_extract import initiate_ioc_extraction_main
 from util.ioc_extract_expander import recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches
