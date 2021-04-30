@@ -199,7 +199,61 @@ def invoke_store_iocs_in_db(extracted_iocs, database):
 
 
 
+def invoke_retrieve_from_local_ioc_db(input_dict, database):
+    """
+    Given an input dict containing ioc_type and ioc_value to search in the database,
+    Finds and returns all the matching entries for each ioc_type and ioc_value so specified.
+
+    Input:
+        input_dict <dict> 
+            Example:
+                {
+                    'md5' : md5_value,
+                    'sha256' : sha256_value,
+                    'ipv4': ip_addr,
+                    'malware_name': malwarename
+                }
+    
+    Output:
+        response_dict <dict>
+            Example:
+                {
+                    'md5:md5_value' : [[retreived_instance_1], [retreived_instance_2], ..., [retreived_instance_k]]
+                    ...
+                    'error' : ['error_str_1', 'error_str_2', .... ,] # In case of any errors for each searched value
+                }
+
+    Raises Exception:
+        No
+
+    """
+
+    response_dict = {}
+    response_dict['error'] = []
+    
+    try:
+        for _ioc_type, _ioc_val in input_dict.items():
+            output_list, error = sqlite_util.retrieve_from_local_ioc_db(_ioc_type, _ioc_val, database)
+            
+            if error != 'SUCCESS':
+                response_dict['error'].append(error)
+                continue
+            
+            key = _ioc_type + ":" + _ioc_val
+            response_dict[key] = output_list
+        
+    except:
+        response_dict['error'].append('Failed to retrieve the IoCs from Local DB...')
+    
+    return response_dict
+        
+
+
 def handler(q=False):
+    """
+    [*] CORE API Request Handler Function
+    
+    """
     
     if q is False:
         return False
@@ -324,7 +378,24 @@ def handler(q=False):
         response = {'results': [{'types': mispattributes['output'], 'values': global_response_dict}]}
     
     elif action_requested == 'get_from_db':
-        # PLACEHOLDER
-        pass
+        
+        input_ioc_dict = {}
+        
+        for _valid_ioc in valid_iocs:
+            try:
+                _ioc_val = _request[_valid_ioc]
+                if _ioc_val:
+                    input_ioc_dict[_valid_ioc] = _ioc_val
+            except:
+                continue
+
+        if not input_ioc_dict:
+            log.error('[-] No IoC type or no IoC value specified...')
+            misperrors['error'] = 'No IoC type or no IoC value specified...'
+            return misperrors
+        
+        response_dict = invoke_retrieve_from_local_ioc_db(input_ioc_dict, 'local_ioc.db')
+
+        response = {'results': [{'types': mispattributes['output'], 'values': response_dict}]}
 
     return response

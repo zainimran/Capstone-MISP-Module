@@ -382,8 +382,8 @@ def get_tuple_list_from_json(list_of_json_information_objects, table_name):
                     tuple_to_append = (_malware,
                                        _obj['source_parent_url'],
                                        _obj['source_parent_name'],
-                                       _obj['tags'],  
                                        _obj['confidence_level'],
+                                       _obj['tags'],
                                        _obj['created_date_epoch'],
                                        _obj['created_date_epoch'],
                                        _obj['reference'],
@@ -519,3 +519,53 @@ def store_in_local_ioc_db(extracted_iocs, database='local_ioc.db'):
   
     log.info(f'[+] Data successfully stored/updated in {database}')
     return rc
+
+
+def retrieve_from_local_ioc_db(ioc_type, ioc_val, database):
+    """
+    Given an input dict containing the ioc_type(s) and ioc_value(s), searches the corresponding table
+    If found, returns the data in ouput_dict and error set as SUCCESS
+    else, returns empty output_list and error set to the corresponding error
+
+    """
+
+    output_list = []
+    error = 'SUCCESS'
+
+    table_ioc_mapping = {
+            'md5' : ['ioc_hashes', 'hash_value'],
+            'sha1' : ['ioc_hashes', 'hash_value'],
+            'sha256' : ['ioc_hashes', 'hash_value'],
+            'ipv4' : ['ioc_ip_addrs', 'ip_value'],
+            'malware_name' : ['ioc_malware', 'malware_name']
+        }
+    
+    
+    _table_name = table_ioc_mapping[ioc_type][0]
+    _col_name = table_ioc_mapping[ioc_type][1]
+
+    select_query = "SELECT * FROM ? WHERE ? = ?;"
+    values = (_table_name, _col_name, ioc_val)
+
+    try:
+        conn = create_connection(database)
+    except:
+        error = f'Unable to establish connection to the database : {database}'
+        return output_list, error
+    
+    try:
+        cursor = conn.execute(select_query, values)
+    except:
+        error = f'Unable to query the {_table_name} to retrieve {_col_name}'
+        return output_list, error
+    
+    rows = cursor.fetchall()
+
+    if not rows:
+        error = f'Given {ioc_type} : {ioc_val} not found in the database'
+        return output_list, error
+
+    output_list = rows
+    conn.close()
+    
+    return output_list, error
