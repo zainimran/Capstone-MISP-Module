@@ -19,7 +19,7 @@
 3. `python cyobstract/setup.py install` #install cyobstract dependencies
 4. `pip install --upgrade --force-reinstall progress` #fixes library errors
 
-- Sample code of how to utilize the initiate_ioc_extraction_main function. This function  and extracts all IOCs utilizing Cyobstract module
+### Sample code of how to utilize the initiate_ioc_extraction_main function. This function  and extracts all IOCs utilizing Cyobstract module
 
 The parameters this function takes are:
   * path_outputs= takes the '/output' folder path from Section 1, where the scraped webpages are location in JSON format
@@ -83,7 +83,7 @@ The parameters this function takes are:
   * search_speed = speed of google searches (warning: do not set too low, or may be IP blocked by Google)
 
 
-- Sample code to run ioc_extract_expander.py for one article
+### Sample code to run ioc_extract_expander.py for one article
 ```bash
 from util.ioc_extract import initiate_ioc_extraction_main
 from util.ioc_extract_expander import recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches
@@ -101,7 +101,7 @@ print('\n----------------Break------------\n')
 bigger_dictionary = initiate_ioc_extraction_main(path_outputs='output/', view_scraping_within_last_hours=1) 
 print(bigger_dictionary) #Will print a bigger dictionary containing all new articles. Won't show output here as it is a long dictionary.
 ```
-- You could even call 'recursive_ioc_extractor_....' several times in a row as well (example use case: interested in obtaining more information of 2 new malwares through their MD5 hashes):
+### You could even call 'recursive_ioc_extractor_....' several times in a row as well (example use case: interested in obtaining more information of 2 new malwares through their MD5 hashes):
 ```bash
 article_1= 'ar21-084a.json'
 article_2= 'ar21-072e.json'
