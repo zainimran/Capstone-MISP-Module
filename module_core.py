@@ -289,7 +289,10 @@ def handler(q=False):
                 # If not successful, return the response object
                 if rc_rec:
                     log.error('[-] Failed to run the recursive submodule...')
-                    global_response_dict['error'] += 'Failed to run the recursive submodule... '
+                    try:
+                        global_response_dict['error'] += 'Failed to run the recursive submodule... '
+                    except:
+                        global_response_dict['error'] = 'Failed to run the recursive submodule... '
                     response = {'results': [{'types': mispattributes['output'], 'values': global_response_dict}]}
                     return response
 
@@ -298,7 +301,10 @@ def handler(q=False):
                     extracted_iocs_dict = invoke_ioc_extract('outputs/', 1)
                 except:
                     log.error('[-] Failed to retrieve IOCs from the recursively scraped data...')
-                    global_response_dict['error'] += 'Failed to extract IoCs in the recursive submodule, '
+                    try:
+                        global_response_dict['error'] += 'Failed to extract IoCs in the recursive submodule, '
+                    except:
+                        global_response_dict['error'] = 'Failed to extract IoCs in the recursive submodule, '
                     response = {'results': [{'types': mispattributes['output'], 'values': global_response_dict}]}
                     return response
 
