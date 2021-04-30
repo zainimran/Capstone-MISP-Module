@@ -98,7 +98,7 @@ def invoke_web_crawler(url):
         # !NOTE!: Do not pass any input parameters to the below string, will result in code execution
         try:
             log.info('[+] Running the webcrawler module...')
-            completed_proc_instance = subprocess.run(input_args, shell=True, check=True)
+            completed_proc_instance = subprocess.run(input_args, check=True)
             log.info('[+] Successfully scraped data from the URLs...')
         except subprocess.CalledProcessError as e:
             log.error('[-] Failed to run the web crawler.')
