@@ -62,3 +62,22 @@ print(dictionary)
      'ab3963337cf24dc2ade6406f11901e1f'), ...
 ```
 
+## 3) (Optional) Expanding the urls (blogs/technical reports/hacker news, etc) through the use of google searches
+
+- Sample code
+```bash
+from util.ioc_extract import initiate_ioc_extraction_main
+from util.ioc_extract_expander import recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches
+
+
+#returns a dictionary of dicts or None (same as Section 2 above)
+dictionary = initiate_ioc_extraction_main(path_outputs='output/', view_scraping_within_last_hours=1) 
+
+#updates 'Capstone-MISP-Module/output' folder with new entries through google searches
+recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches(dictionary=dictionary, article_lookup='ar21-084a.json', ioc='md5', num_google_results=5,search_speed=5)
+
+print('\n----------------Break------------\n')
+
+#We call again initiate_ioc_extraction_main() to generate a bigger dictionary utilizing all the newly google queried articles for the extraction of more IOCs above
+bigger_dictionary = initiate_ioc_extraction_main(path_outputs='output/', view_scraping_within_last_hours=1) 
+```
