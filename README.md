@@ -113,7 +113,7 @@ even_bigger_dictionary = initiate_ioc_extraction_main(path_outputs='output/', vi
 
 ```
 
-- Demonstration of expansion of scraped-websites folder in /Capstone-MISP-Module/output/ (compare to Section 1):
+- Demonstration of expansion of scraped-websites folder in /Capstone-MISP-Module/output/ (compare to Section 1). We can observe we have information of several other reputable websites such as McAfee:
 
 <div align="center"><img alt="First pass OCR transcription" width="600px" src="images/outputfolderexpanded.png"></div>
 
