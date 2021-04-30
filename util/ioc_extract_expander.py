@@ -6,25 +6,48 @@ You maybe view the results by using the bash command: '$ls ouput/' to view the n
 
 from module_core import invoke_web_crawler
 from util.ioc_extract import initiate_ioc_extraction_main 
+import requests
+from bs4 import BeautifulSoup
+import re
 
-# Helper 1
+#Helper 1
+#Seaches for ioc in url text, if it finds it, it returns True. If it can not find it, it scrapes this url from the list by returning False
+def url_find_ioc(ioc, url): 
+  res = requests.get(url)
+  html_page = res.content
+  soup = BeautifulSoup(html_page, 'html.parser')
+  #find the exact IOC
+  if soup(text=re.compile(ioc)):
+    #print('found the ioc')
+    return True
+  else:
+    #print("string was not found")
+    return False
+
+# Helper 2
 #search google for a string=search_string
 def search_google(search_string,num_results=5,search_speed=5):
   try:
       from googlesearch import search
   except ImportError: 
       print("No module named 'google' found")
-    
+  
+  google_dorks_formatted_string = '"{}"|"{}"'.format(search_string,search_string) #https://cdn-cybersecurity.att.com/blog-content/GoogleHackingCheatSheet.pdf #using an OR operator but for the same search, to exclusively search for documents containing said IOC (in this case the md5). 
+  #Could also do and statements with & symbol to later seach upon i.e. 2 IOCS such as md5 and ipv4
+  #Note: Websites like McAfee websites for some reason do not give you the text that contains the IOC, and redirect you to a subscription webpage when accessed from google searches. Will drop their keys to not contaminate our dataset
   url_list = list()                   
   for retrieved_url in search(search_string, tld="co.in", num=num_results, stop=num_results, pause=search_speed):
-      url_list.append(retrieved_url)
+      if url_find_ioc(ioc=search_string,url=retrieved_url): #if url contains the exact string in the text , we scrape it by keeping the url
+        url_list.append(retrieved_url)
+      else: #if not, we skip this url (By doing this WE do NOT add it to the database, and keep it CLEAN)
+        continue
   return url_list
 
-#Helper 2
+#Helper 3
 #Given an list of iocs, it does a google search for the top `num_results` of each ioc in the list, web-scrapes them, and stores results in '/output/' folder
 def ioc_extractor_over_google(iocs_list,num_results=5,search_speed=5):
   complete_list_url = []
-  for identifiers in iocs_list[0:2]:
+  for identifiers in iocs_list:
     print(identifiers)
     complete_list_url.extend(search_google(search_string=identifiers,num_results=num_results,search_speed=search_speed))
 
