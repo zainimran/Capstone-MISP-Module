@@ -20,7 +20,7 @@
 from util.ioc_extract import initiate_ioc_extraction_main
 
 #returns a dictionary of dicts or None
-dictionary = initiate_ioc_extraction_main(path_outputs='/output/', view_scraping_within_last_hours=1) 
+dictionary = initiate_ioc_extraction_main(path_outputs='output/', view_scraping_within_last_hours=1) 
 print(dictionary)
 ```
 ### Partial sample of output on a CISA analysis-report (url: https://us-cert.cisa.gov/ncas/analysis-reports/ar21-072d)
