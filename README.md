@@ -104,6 +104,8 @@ selected_ioc_type = 'md5'
 recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches(dictionary=dictionary, article_lookup=article_1, ioc=selected_ioc_type, num_google_results=10,search_speed=3)
 recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches(dictionary=dictionary, article_lookup=article_2, ioc=selected_ioc_type, num_google_results=10,search_speed=3)
 
+even_bigger_dictionary = initiate_ioc_extraction_main(path_outputs='output/', view_scraping_within_last_hours=1) 
+
 ```
 
 - Demonstration of expansion of scraped-websites folder in /Capstone-MISP-Module/output/ (compare to Section 1):
