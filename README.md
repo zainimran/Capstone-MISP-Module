@@ -101,7 +101,7 @@ print('\n----------------Break------------\n')
 bigger_dictionary = initiate_ioc_extraction_main(path_outputs='output/', view_scraping_within_last_hours=1) 
 print(bigger_dictionary) #Will print a bigger dictionary containing all new articles. Won't show output here as it is a long dictionary.
 ```
-### You could even call 'recursive_ioc_extractor_....' several times in a row as well (example use case: interested in obtaining more information of 2 new malwares through their MD5 hashes) (*Note, this code takes around 30 minutes as we are scraping 2 big articles which contain several MD5's in order to create a robust dataset*):
+### You could even call 'recursive_ioc_extractor_....' several times in a row as well (example use case: interested in obtaining more information of 2 new malwares through their MD5 hashes) (*Note, this code takes around 30 minutes as we are scraping one particular big article which contain 43 MD5 Hashes in order to create a robust dataset signature in this example*):
 ```bash
 from util.ioc_extract import initiate_ioc_extraction_main
 from util.ioc_extract_expander import recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches
@@ -111,8 +111,8 @@ dictionary = initiate_ioc_extraction_main(path_outputs='output/', view_scraping_
 article_1= 'ar21-084a.json'
 article_2= 'unc2447-sombrat-and-fivehands-ransomware-sophisticated-financial-threa.json'
 selected_ioc_type = 'md5'
-recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches(dictionary=dictionary, article_lookup=article_1, ioc=selected_ioc_type, num_google_results=10,search_speed=3)
-recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches(dictionary=dictionary, article_lookup=article_2, ioc=selected_ioc_type, num_google_results=10,search_speed=3)
+recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches(dictionary=dictionary, article_lookup=article_1, ioc=selected_ioc_type, num_google_results=10,search_speed=3) #contains 5 md5 hashes
+recursive_ioc_extractor_from_article_name_and_ioc__over_google_searches(dictionary=dictionary, article_lookup=article_2, ioc=selected_ioc_type, num_google_results=10,search_speed=3) #contains 43 md5 hashes
 
 even_bigger_dictionary = initiate_ioc_extraction_main(path_outputs='output/', view_scraping_within_last_hours=1) 
 
