@@ -560,8 +560,8 @@ def retrieve_from_local_ioc_db(ioc_type, ioc_val, database):
     _table_name = table_ioc_mapping[ioc_type][0]
     _col_name = table_ioc_mapping[ioc_type][1]
 
-    select_query = "SELECT * FROM ? WHERE ? = ?;"
-    values = (_table_name, _col_name, ioc_val)
+    select_query = f"""SELECT * FROM {_table_name} WHERE {_col_name} = ?;"""
+    values = (ioc_val,)
 
     try:
         conn = create_connection(database)
@@ -570,12 +570,13 @@ def retrieve_from_local_ioc_db(ioc_type, ioc_val, database):
         return output_list, error
     
     try:
-        cursor = conn.execute(select_query, values)
+        cur = conn.cursor()
+        cur.execute(select_query, values)
     except:
         error = f'Unable to query the {_table_name} to retrieve {_col_name}'
         return output_list, error
     
-    rows = cursor.fetchall()
+    rows = cur.fetchall()
 
     if not rows:
         error = f'Given {ioc_type} : {ioc_val} not found in the database'

@@ -378,6 +378,8 @@ def handler(q=False):
         response = {'results': [{'types': mispattributes['output'], 'values': global_response_dict}]}
     
     elif action_requested == 'get_from_db':
+
+        log.info(f'[+] Action requested: {action_requested}')
         
         input_ioc_dict = {}
         
@@ -394,7 +396,11 @@ def handler(q=False):
             misperrors['error'] = 'No IoC type or no IoC value specified...'
             return misperrors
         
+        log.info('[+] Retreiving information from the database...')
+
         response_dict = invoke_retrieve_from_local_ioc_db(input_ioc_dict, 'local_ioc.db')
+
+        log.info('[+] Sending response to the user...')
 
         response = {'results': [{'types': mispattributes['output'], 'values': response_dict}]}
 
