@@ -425,31 +425,45 @@ def cleanup_input_json(json_object):
                             
                             temp_dict['reference'] = _sub_folder_key
                             
-                            temp_dict['md5'] = list(_sub_folder_dict['md5']) if 'md5' in _sub_folder_dict.keys() else None
+                            hash_types = ['md5', 'sha1', 'sha256']
                             
-                            temp_dict['sha1'] = list(_sub_folder_dict['sha1']) if 'sha1' in _sub_folder_dict.keys() else None
+                            for _ht in hash_types:
+                                try:
+                                    _hash_list = _sub_folder_dict[_ht]
+                                    if not _hash_list:
+                                        _hash_list = None
+                                except:
+                                    _hash_list = None
+                                
+                                temp_dict[_ht] = _hash_list
                             
-                            temp_dict['sha256'] = list(_sub_folder_dict['sha256']) if 'sha256' in _sub_folder_dict.keys() else None
+                            ip_addrs = ['ipv4addr', 'ipv6addr'] 
+                            ip_addrs_vals = []
+                            for _ipt in ip_addrs:
+                                try:
+                                    _ip_list = _sub_folder_dict[_ipt]
+                                    if not _ip_list:
+                                        continue
+                                    else:
+                                        ip_addrs_vals.extend(_ip_list)
+                                except:
+                                    continue
                             
-                            if 'ipv4addr' and 'ipv6addr' in _sub_folder_dict.keys():
-                                if _sub_folder_dict['ipv4addr']:
-                                    temp_dict['ip_address'] = list(_sub_folder_dict['ipv4addr'])
-                                if _sub_folder_dict['ipv6addr']:
-                                    temp_dict['ip_address'].extend(list(_sub_folder_dict['ipv6addr']))
-                            
-                            elif 'ipv4addr' in _sub_folder_dict.keys():
-                                temp_dict['ip_address'] = list(_sub_folder_dict['ipv4addr']) if _sub_folder_dict['ipv4addr'] else None
-                            
-                            elif 'ipv6addr' in _sub_folder_dict.keys():
-                                temp_dict['ip_address'] = list(_sub_folder_dict['ipv6addr']) if _sub_folder_dict['ipv6addr'] else None
-                            
-                            else:
+                            if not ip_addrs_vals:
                                 temp_dict['ip_address'] = None
+                            else:
+                                temp_dict['ip_address'] = ip_addrs_vals
                             
                             temp_dict['source_parent_url'] = _sub_folder_dict['article_url'] if 'article_url' in _sub_folder_dict.keys() else None
                             
                             try:
-                                tags_list = ', '.join(_sub_folder_dict['topic']) if _sub_folder_dict['topic'] else None
+                                topics_list = _sub_folder_dict['topic']
+                                
+                                if not topics_list:
+                                    tags_list = None
+                                
+                                tags_list = ', '.join(topic for topic in topics_list)
+                            
                             except KeyError:
                                 tags_list = None
                             
@@ -474,7 +488,9 @@ def cleanup_input_json(json_object):
                             temp_dict['domains'] = None
                             
                             try:
-                                malware_list = list(_sub_folder_dict['malware']) if _sub_folder_dict['malware'] else None
+                                malware_list = _sub_folder_dict['malware']
+                                if not malware_list:
+                                    malware_list = None
                             except KeyError:
                                 malware_list = None
                             

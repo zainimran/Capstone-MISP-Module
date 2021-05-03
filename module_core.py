@@ -313,7 +313,7 @@ def handler(q=False):
 
         # Extract IOCs
         try:
-            extracted_iocs_dict_initial = invoke_ioc_extract('outputs/', 1)
+            extracted_iocs_dict_initial = invoke_ioc_extract('output/', 1)
         except:
             log.error('[-] Failed to retrieve IOCs from the scraped data...')
             misperrors['error'] = 'Unable to retrieve IOCs from crawled webpages'
