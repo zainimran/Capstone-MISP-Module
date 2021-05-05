@@ -1,13 +1,19 @@
 # Capstone-MISP-Module
 
 - [Capstone-MISP-Module](#capstone-misp-module)
-  - [How to run the spider module](#how-to-run-the-spider-module)
+  - [1) How to run the spider module](#1-how-to-run-the-spider-module)
+  - [2) Setting up and How to run the Indicators Of Compromise (IOC) extraction module on the /outputs/ folder generated from step 1](#2-setting-up-and-how-to-run-the-indicators-of-compromise-ioc-extraction-module-on-the-outputs-folder-generated-from-step-1)
+    - [Sample code of how to utilize the initiate_ioc_extraction_main function. This function  and extracts all IOCs utilizing Cyobstract module](#sample-code-of-how-to-utilize-the-initiate_ioc_extraction_main-function-this-function--and-extracts-all-iocs-utilizing-cyobstract-module)
+    - [Partial sample of output on a CISA analysis-report (url: https://us-cert.cisa.gov/ncas/analysis-reports/ar21-072d)](#partial-sample-of-output-on-a-cisa-analysis-report-url-httpsus-certcisagovncasanalysis-reportsar21-072d)
+  - [3) (Optional) Expanding the current scraped urls through the use of google searches (blogs/technical reports/hacker news, etc) implemented in Capstone-MISP-Module/util/ioc_extract_expander.py](#3-optional-expanding-the-current-scraped-urls-through-the-use-of-google-searches-blogstechnical-reportshacker-news-etc-implemented-in-capstone-misp-moduleutilioc_extract_expanderpy)
+    - [Sample code to run ioc_extract_expander.py for one article](#sample-code-to-run-ioc_extract_expanderpy-for-one-article)
+    - [You could even call 'recursive_ioc_extractor_....' several times in a row as well (example use case: interested in obtaining more information of 2 new malwares through their MD5 hashes) (*Note, this code takes around 30 minutes as we are scraping one particular big article which contain 43 MD5 Hashes in order to create a robust dataset signature in this example*):](#you-could-even-call-recursive_ioc_extractor_-several-times-in-a-row-as-well-example-use-case-interested-in-obtaining-more-information-of-2-new-malwares-through-their-md5-hashes-note-this-code-takes-around-30-minutes-as-we-are-scraping-one-particular-big-article-which-contain-43-md5-hashes-in-order-to-create-a-robust-dataset-signature-in-this-example)
 ## 1) How to run the spider module
 1. Navigate to `Capstone-MISP-Module/web-crawler`
 2. If not done already, install project dependencies with `pipenv install`
 3. Open the python virtual environment for spider module with `pipenv shell`
-4. Navigate back to root directory: `Capstone-MISP-Module/web-crawler`
-5. Run the spider with `scrapy runspiderweb-crawler/infosecspider/spiders/scraper.py`, where `scraper.py` is the name of the scraping script in `infosecspider/spiders`. This will create an `/output/` folder inside the directory of `Capstone-MISP-Module/` which will contain all the web-scraped urls/blogs posts/technical reports.
+4. Navigate back to root directory: `cd ..`
+5. Run the spider with `scrapy runspider web-crawler/infosecspider/spiders/scraper.py`, where `scraper.py` is the name of the scraping script inside `web-crawler/infosecspider/spiders`. This will create an `output/` folder inside the directory of `Capstone-MISP-Module/` which will contain all the web-scraped urls/blogs posts/technical reports.
 
 - Viewing the initial folders created in /Capstone-MISP-Module/output/:
 <div align="center"><img alt="First pass OCR transcription" width="400px" src="images/outputfoldervanilla.png"></div>
