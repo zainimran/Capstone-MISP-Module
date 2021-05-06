@@ -16,6 +16,10 @@ class InfoSecSpider(scrapy.Spider):
             'https://www.fireeye.com/blog/threat-research.html',
             'https://us-cert.cisa.gov/ncas/analysis-reports.xml', # already has support for stix-formatted reports, see https://us-cert.cisa.gov/sites/default/files/publications/MAR-10331466-1.v1.WHITE_stix.xml for example
             'https://securelist.com/',
+            'https://www.darktrace.com/en/blog/',
+            'https://labs.sentinelone.com/',
+            'https://blog.malwarebytes.com/malwarebytes-news/',
+            'https://www.esentire.com/resources/security-advisories',
         ]
 
         # https://docs.scrapy.org/en/latest/intro/tutorial.html#using-spider-arguments
@@ -37,10 +41,10 @@ class InfoSecSpider(scrapy.Spider):
         output_dir = f'./output/{domain}/{timestr}'
         Path(output_dir).mkdir(parents=True, exist_ok=True)
 
-        f_name_index = -1
         if domain == 'fireeye':
             POST_SELECTOR = 'div .c11v9 a ::attr("href")'
             TEXT_SELECTOR = 'div[itemprop*=articleBody].c00.c00v0 *::text'
+            f_name_index = -1
         elif domain == 'securelist':
             POST_SELECTOR = 'a.c-card__link ::attr("href")'
             TEXT_SELECTOR = 'div.js-reading-wrapper *::text'
@@ -48,6 +52,23 @@ class InfoSecSpider(scrapy.Spider):
         elif domain == 'cisa':
             POST_SELECTOR = 'a ::attr("href")'
             TEXT_SELECTOR = 'table#cma-table *::text'
+            f_name_index = -1
+        elif domain == 'darktrace':
+            POST_SELECTOR = 'div.latest-post > a ::attr("href"), div.item > a ::attr("href")'
+            TEXT_SELECTOR = 'div.blog-post *::text'
+            f_name_index = -2
+        elif domain == 'sentinelone':
+            POST_SELECTOR = 'div.link-more > a ::attr("href")'
+            TEXT_SELECTOR = 'section.entry-content *::text'
+            f_name_index = -2
+        elif domain == 'malwarebytes':
+            POST_SELECTOR = 'div.card-container > a ::attr("href")'
+            TEXT_SELECTOR = 'div.post-content.entry-content.e-content *::text'
+            f_name_index = -2
+        elif domain == 'esentire':
+            POST_SELECTOR = 'a.read-more ::attr("href")'
+            TEXT_SELECTOR = 'div.copy.col-12 *::text'
+            f_name_index = -1
         else:
             text_list = ''.join(response.xpath('//text()[re:test(., "\w+")]').getall()).strip()
             self.write_output(response.url, text_list, output_dir, custom=True)
