@@ -214,6 +214,12 @@ nano body.json
 curl -s http://127.0.0.1:6666/query -H "Content-Type: application/json" --data @body.json -X POST
 ```
 
+**Note:** 
+
+In case any of the above steps fail, as a fail-safe option, a zipped version of the modified files would (hopefully) be provided.
+
+If the steps succeed, the module would be integrated with MISP and would be accessible via the MISP Module Handling API. However, the module might still error out when executing its tasks because of the mangled dependencies in the core MISP installation. Therefore, it is recommended to use the module via the Web UI (Part I above).
+
 ### Submodule Specific Instructions
 
 - [Capstone-MISP-Module](#capstone-misp-module)
