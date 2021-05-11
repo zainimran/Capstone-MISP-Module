@@ -1,5 +1,215 @@
 # Capstone-MISP-Module
 
+### Installation Instructions
+
+**Step 1:** Clone the github repo
+
+```python
+git clone <repo_url_here>
+```
+
+**Step 2:** Create the virtual environment for the web-spider submodule
+
+```bash
+cd Capstone-MISP-Module/web-crawler
+pipenv install
+pipenv shell
+```
+
+**Step 3:** Install the tool requirements in the created virtual environment
+
+```bash
+pip install -r requirements.txt
+```
+
+**Step 4:** Unzip `cyobstract.zip` in the root repo directory (in folder: `cyobstract`)
+
+```bash
+unzip cyobstract.zip
+```
+
+**Step 5:** Install `cyobstract` dependencies in the virtual environment
+
+```bash
+python cyobstract/setup.py install
+
+# Run the below for fail-safe (if installation of any dep. fails)
+pip install --upgrade --force-reinstall progress
+```
+
+**Step 6:** Launch the webapp from the repo root directory
+
+```bash
+python app.py
+```
+
+**Step 7:** The module has robust logging mechanisms generating both `info` and `debug` level messages as well in addition to the `warnings` and `errors` . The messages can be checked in `console` to see if everything is working as expected whenever a task is executed by the module.
+
+### Integration Instructions
+
+**Note:** It is recommended that a backup of the existing MISP Modules directory be taken before proceeding (source: author).
+
+**Step 0:** Create a copy of the repo, and navigate to the new directory
+
+```bash
+mkdir ../Capstone-MISP-Module-Copy
+cp -rf . ../Capstone-MISP-Module-Copy/.
+cd ../Capstone-MISP-Module-Copy
+```
+
+**Step 1:** Fix the imports in `module_core.py` script and the helper scripts in `util` directory (in the copies so created above)
+
+```python
+# FIX IMPORTS in module_core.py and all the other scripts in the misp_modules dir
+
+# Example: module_core.py
+# [-] BEFORE:
+from util import sqlite_util
+from util import ioc_extract, ioc_extract_expander
+
+# [+] AFTER
+from _cmu_capstone.util import sqlite_util
+from _cmu_capstone.util import ioc_extract, ioc_extract_expander
+```
+
+**Step 2:** Copy the `module_core.py` file to the directory where the MISP modules are installed
+
+````bash
+# Run from the root of the copied repo directory
+# Default MISP Modules directory on Ubuntu:
+# /usr/local/src/misp-modules/misp_modules/
+# Saves the file as cmu_capstone.py
+cp module_core.py /usr/local/src/misp-modules/misp_modules/modules/expansion/cmu_capstone.py
+````
+
+**Step 3:** Copy the contents of the above created repo folder (`Capstone-MISP-Module`) to a new folder in the MISP modules directory and the `lib` directory
+
+```bash
+# Run from the root of the copied repo directory
+cp -rf . /usr/local/src/misp-modules/misp_modules/modules/expansion/_cmu_capstone/.
+cp -rf . /usr/local/src/misp-modules/misp_modules/lib/_cmu_capstone/.
+```
+
+**Step 4:** Add our module in `__init__.py` located in the MISP Modules directory
+
+```python
+nano /usr/local/src/misp-modules/misp_modules/modules/expansion/__init__.py
+
+# [-] BEFORE
+__all__ = ['cuckoo_submit', 'vmray_submit', ....]
+
+# [+] AFTER
+__all__ = ['cuckoo_submit', 'vmray_submit', ...., 'cmu_capstone']
+```
+
+**Step 5:** Restart the MISP Modules service
+
+```bash
+# Note: Right now, we do so to check if the module is being properly loaded by the svc or not
+
+systemctl stop misp-modules.service
+systemctl start misp-modules.service
+
+# Check the status
+systemctl status misp-modules.service
+
+# if any errors, means something went south in the previous steps
+# Redo from scratch
+# Can also rebuild the MISP Modules from scratch (ref: MISP Modules Github)
+```
+
+**Step 6:** Enable the module in MISP UI
+
+```python
+# Navigate to MISP Login Webpage > Login > Administration > Server Settings and Maintenance
+# Select "Enrichment"
+# Scroll down and/or Ctrl+F "CMU"
+# You should see our module (finally :'))
+
+# Set the values as follows
+# [+] Change false -> true
+Recommended	Plugin.Enrichment_cmu_capstone_enabled	true
+
+# [+OPTIONAL] Select the organization whom you want to give the access to for this module
+# If set, only members of this org will have access to the module
+Recommended	Plugin.Enrichment_cmu_capstone_restrict	<select_org_if_you_want> 
+
+# [NO CHANGE] Leave as is
+Recommended	Plugin.Enrichment_cmu_capstone_custom_API	
+```
+
+**Step 7:** Restart the MISP Modules service
+
+```python
+# Note: Right now, we do so in the hope that this is the final time we need to do it
+
+systemctl stop misp-modules.service
+systemctl start misp-modules.service
+
+# Check the status
+systemctl status misp-modules.service
+
+# if any errors, means something went south in the previous steps
+# Redo from scratch
+# Can also rebuild the MISP Modules from scratch (ref: MISP Modules Github)
+```
+
+**Step 8:** Check if the module is loaded and accessible via the MISP Module handling API
+
+```bash
+# Run the following command, this will list the loaded modules
+curl http://localhost:6666/modules | jq .
+
+# Search through for capstone_cmu module
+# In case you don't have jq installed and don't want to install it
+
+curl http://localhost:6666/modules | grep "CMU"
+
+```
+
+**Step 9:** Create request body to interact with the module
+
+```python
+# Create the body object (which we will send in the request)
+nano body.json
+
+# In the body.json, add the following:
+# Note: this can also be changed depending on the needs
+# [0] Available values for action: scrape, get_from_db
+# [1] Available keys: action, url, md5, sha1, sha256, ipv4, malware_name with self explanatory values 
+# [2] Available key: recursive (0/1) (directs the scraper to recursively search for IoCs, partially implemented)
+#	[2a] Refer to recursive_ioc_extractor section below
+# [-] Batch processing is future work, only one value per type supported
+
+# [+] For scraping of a specified URL (non-recursive)
+{
+	"module" : "cmu_capstone",
+	"action" : "scrape",
+	"url" : "sample.url"
+	# If no URL is specified, hardcoded reputable sources are used
+	# If recursive is not specified, it is assumed to be 0 (implying no-recursion was requested)
+}
+
+# [+] For fetching matching data from the Local IoC DB
+{
+	"module" : "cmu_capstone",
+	"action" : "get_from_db",
+	"md5" : "54mpl3md55tr1ng",
+	"ipv4" : "sample.ip.address.v4",
+	"malware_name" : "w32_sample_malware.cx"
+}
+
+# Save the file
+```
+
+**Step 10:** Interact with the module
+
+```bash
+curl -s http://127.0.0.1:6666/query -H "Content-Type: application/json" --data @body.json -X POST
+```
+
+### Submodule Specific Instructions
+
 - [Capstone-MISP-Module](#capstone-misp-module)
   - [1) How to run the spider module](#1-how-to-run-the-spider-module)
   - [2) Setting up and How to run the Indicators Of Compromise (IOC) extraction module on the /outputs/ folder generated from step 1](#2-setting-up-and-how-to-run-the-indicators-of-compromise-ioc-extraction-module-on-the-outputs-folder-generated-from-step-1)
