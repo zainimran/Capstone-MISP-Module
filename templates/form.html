@@ -1,4 +1,4 @@
-<img src="../images/nsin_logo.png" style="float:right;margin 0 0 0;">
+<img src="{{ url_for('static', filename='nsin_logo.png') }}" style="float:right;margin 0 0 0">
 <h1> Capstone IoC Enumeration Module</h1>
 <h2> NSIN, NDU, CMU</h2>
 <form action="/data" method="POST">
@@ -21,10 +21,9 @@
     </fieldset>
 </form>
 
-<p style="text-align:center;"> <b>&#9989 Brough to you by: Team NSIN &#127881</b> </p>
+<p style="text-align:center;"> <b>&#9989 Brought to you by: Team NSIN &#127881</b> </p>
 <p style="text-align:center;"> <b>Made with &#128149 at: </b> </p>
-<img src="../images/heinz_logo.jpg" width=350 height=100 class="center">
-
+<img src="{{ url_for('static', filename='heinz_logo.jpg') }}" width=350 height=100 class="center">
 <style>
 fieldset {
     width: 500px;

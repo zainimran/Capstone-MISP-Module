@@ -3,7 +3,7 @@ import jinja2
 import json
 from util import sqlite_util
 from module_core import handler
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for
 from werkzeug.datastructures import ImmutableMultiDict
 
 app = Flask(__name__)
