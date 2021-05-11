@@ -115,10 +115,11 @@ def invoke_ioc_extract(output_path, time_duration):
     Invokes the IOC extractor submodule
 
     Input:
-        XYZ
+        The path containing the scraped data objects
+        Time duration to extract the IoCs from (within X hours from current time)
 
     Output:
-        XYZ
+        iocs_dict <dict>: Extracted IoCs
 
     Raises Exception:
         Yes/No
@@ -147,8 +148,23 @@ def invoke_ioc_extract(output_path, time_duration):
 
 def invoke_web_scraper_recursive(ioc_extract_dict, article, ioc_category):
     """
-    <TODO: WIP>
+    Recursively calls the web scraper module
+    Searches the web for the found IoCs
+    Extracts the IoCs from the newly found articles
 
+    Input:
+        Extracted IoCs <dict>:
+            Dict of extracted IoCs from the initial scraped articles/reports
+        Article <str> : 
+            Article to consider when recursively searching the web (only IoCs scraped from this article/report will be searched)
+        IoC Category <str>:
+            Category of IoC to consider (Ex: MD5, SHA1 etc.)
+
+    Output:
+        Enriched IoCs <dict>
+
+    Raises Exception on error:
+        No
     """
     rc_rec = 0
 
