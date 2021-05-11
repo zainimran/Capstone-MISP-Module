@@ -1,0 +1,100 @@
+<style type="text/css">
+    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #729ea5;border-collapse: collapse;}
+    .tftable th {font-size:12px;background-color:#acc8cc;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;text-align:left;}
+    .tftable tr {background-color:#d4e3e5;}
+    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;}
+    .tftable tr:hover {background-color:#ffffff;}
+</style>
+
+<h1> Results </h1>
+<br>
+
+{% if action_str == 'scrape' %}
+    
+    {% if error %}
+        
+        <p> {{error}} </p>
+    
+    {% else %}
+
+        <!-- Keys to include: malware, reference, md5, sha1, sha256, ip_address, tags -->
+        {% for _dict in input_list_of_dicts %}
+            <h3> Source: {{_dict['source_parent_name']}} </h3>
+            <p> Source URL: <a href="{{ _dict['source_parent_url']}}">{{ _dict['source_parent_url'] }}</a></p>
+            
+            <table class="tftable" border="1">
+            <tr><th>IoC Type</th><th>IoC Value</th></tr>
+            
+            {% for _key, _val in _dict.items() %}
+                {% if _key == 'md5' and _val is not none %}
+                    {% for _v in _val %}
+                        <tr><td>{{_key}}</td><td>{{_v}}</td></tr>
+                    {% endfor %}
+                
+                {% elif _key == 'sha1' and _val is not none %}
+                    {% for _v in _val %}
+                        <tr><td>{{_key}}</td><td>{{_v}}</td></tr>
+                    {% endfor %}
+                
+                {% elif _key == 'sha256' and _val is not none %}
+                    {% for _v in _val %}
+                        <tr><td>{{_key}}</td><td>{{_v}}</td></tr>
+                    {% endfor %}
+                
+                {% elif _key == 'ip_address' and _val is not none %}
+                    {% for _v in _val %}
+                        <tr><td>{{_key}}</td><td>{{_v}}</td></tr>
+                    {% endfor %}
+
+                {% elif _key == 'tags' and _val is not none and _val|length > 0%}
+                    <tr><td>{{_key}}</td><td>{{_v}}</td></tr>
+                
+                {% elif _key == 'malware' and _val is not none %}
+                    {% for _v in _val %}
+                        <tr><td>{{_key}}</td><td>{{_v}}</td></tr>
+                    {% endfor %}
+                
+                {% elif _key == 'reference' and _val is not none and _val|length > 0 %}
+                    <tr><td>Reference</td><td>{{_v}}</td></tr>
+
+                {% endif %}
+
+            {% endfor %}
+            
+            </table>
+            <br>
+        {% endfor %}
+
+    {% endif %}
+
+{% else %}
+    {% if error %}
+        {% for _err in error %}
+            <p> {{error}} </p>
+        {% endfor %}
+    
+    {% else %}
+        {% for _key, _list in input_list_of_dicts.items() %}
+            {% if 'error' not in _key %}
+                <h3> {{_key}} </h2>
+                {% if _list %}
+                    <table class="tftable" border="1">
+                    <tr>
+                    {% for _col in _list[0] %}
+                        <th>{{_col}}</th>
+                    {% endfor %}
+                    </tr>
+
+                    {% for _ind_list in _list[1:] %}
+                        <tr>
+                        {% for _val in _ind_list %}
+                            <td>{{_val}}</td>
+                        {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </table>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}            
+{% endif %}

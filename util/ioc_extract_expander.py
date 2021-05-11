@@ -9,7 +9,7 @@ You maybe view the results by using the bash command: '$ls ouput/' to view the n
 import re
 import requests
 from bs4 import BeautifulSoup
-from module_core import invoke_web_crawler
+import module_core
 from util.ioc_extract import initiate_ioc_extraction_main 
 
 
@@ -61,7 +61,7 @@ def ioc_extractor_over_google(iocs_list,num_results=5,search_speed=5):
     complete_list_url.extend(search_google(search_string=identifiers,num_results=num_results,search_speed=search_speed))
 
   for url_sample in complete_list_url:
-    rc_wc = invoke_web_crawler(url_sample)
+    rc_wc = module_core.invoke_web_crawler(url_sample)
   
   return rc_wc
 

@@ -1,0 +1,19 @@
+<h1> Capstone IoC Enumeration Module</h1>
+<h2> NSIN, NDU, CMU</h2>
+
+<form action="/data" method="POST">
+    <p> Choose the action to perform: </p>
+    <input type="radio" name="action" value="scrape">
+    <label for="action">Run Scraper</label><br>
+    <input type="radio" name="action" value="get_from_db">
+    <label for="female">Fetch from Local IoC DB</label>
+    <br>
+    <p>If fetch from Local IoC DB, please specify atleast one of the below</p>
+    <p>MD5 <input type = "text" name = "md5" /></p>
+    <p>SHA1 <input type = "text" name = "sha1" /></p>
+    <p>SHA256 <input type = "text" name = "sha256" /></p>
+    <p>IPv4 <input type = "text" name = "ipv4" /></p>
+    <p>Malware Name <input type = "text" name = "malware_name" /></p>
+    <br>
+    <p><input type = "submit" value = "Submit" /></p>
+</form> 

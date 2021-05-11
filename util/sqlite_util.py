@@ -582,7 +582,10 @@ def retrieve_from_local_ioc_db(ioc_type, ioc_val, database):
         error = f'Given {ioc_type} : {ioc_val} not found in the database'
         return output_list, error
 
-    output_list = rows
+    column_names = [description[0] for description in cur.description]
+    output_list.append(column_names)
+    for _tup in rows:
+        output_list.append(list(_tup))
     conn.close()
     
     return output_list, error
