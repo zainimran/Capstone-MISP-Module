@@ -43,7 +43,13 @@ pip install --upgrade --force-reinstall progress
 python app.py
 ```
 
-**Step 7:** The module has robust logging mechanisms generating both `info` and `debug` level messages as well in addition to the `warnings` and `errors` . The messages can be checked in `console` to see if everything is working as expected whenever a task is executed by the module.
+**Step 7:** Navigate to the below address in the browser to access the module
+
+```bash
+http://localhost:5000/form
+```
+
+**Step 8:** The module has robust logging mechanisms generating both `info` and `debug` level messages as well in addition to the `warnings` and `errors` . The messages can be checked in `console` to see if everything is working as expected whenever a task is executed by the module.
 
 ### Integration Instructions
 
