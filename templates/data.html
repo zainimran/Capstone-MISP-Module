@@ -70,31 +70,30 @@
 {% else %}
     {% if error %}
         {% for _err in error %}
-            <p> {{error}} </p>
+            <p> {{_err}} </p>
         {% endfor %}
+    {% endif %}
     
-    {% else %}
-        {% for _key, _list in input_list_of_dicts.items() %}
-            {% if 'error' not in _key %}
-                <h3> {{_key}} </h2>
-                {% if _list %}
-                    <table class="tftable" border="1">
+    {% for _key, _list in input_list_of_dicts.items() %}
+        {% if 'error' not in _key %}
+            <h3> {{_key}} </h2>
+            {% if _list %}
+                <table class="tftable" border="1">
+                <tr>
+                {% for _col in _list[0] %}
+                    <th>{{_col}}</th>
+                {% endfor %}
+                </tr>
+
+                {% for _ind_list in _list[1:] %}
                     <tr>
-                    {% for _col in _list[0] %}
-                        <th>{{_col}}</th>
+                    {% for _val in _ind_list %}
+                        <td>{{_val}}</td>
                     {% endfor %}
                     </tr>
-
-                    {% for _ind_list in _list[1:] %}
-                        <tr>
-                        {% for _val in _ind_list %}
-                            <td>{{_val}}</td>
-                        {% endfor %}
-                        </tr>
-                    {% endfor %}
-                    </table>
-                {% endif %}
+                {% endfor %}
+                </table>
             {% endif %}
-        {% endfor %}
-    {% endif %}            
+        {% endif %}
+    {% endfor %}            
 {% endif %}
